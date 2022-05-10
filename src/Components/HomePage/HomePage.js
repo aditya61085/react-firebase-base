@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Post from '../Post/Post';
-import {db} from '../../Firebase/firebase';
+import {store} from '../../Firebase/firebase';
 import { collection, getDocs } from 'firebase/firestore/lite';
 
 function HomePage() {
@@ -9,7 +9,7 @@ function HomePage() {
     posts: []
   });
   async function getCities() {
-    const citiesCol = collection(db, 'posts');
+    const citiesCol = collection(store, 'posts');
     const citySnapshot = await getDocs(citiesCol);
     const cityList = citySnapshot.docs.map(doc => doc.data());
     
@@ -21,7 +21,7 @@ function HomePage() {
     })
   }
 
-
+  // eslint-disable-next-line
   {/** Create separate file for posts 
     https://www.bezkoder.com/react-firebase-hooks-crud/
   */}

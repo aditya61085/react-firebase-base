@@ -7,9 +7,8 @@
   
 }
 .app__headerImage {
-  flex-direction: row;
 }
 
 .header__rightSection {
-  flex-direction: row;
+  float: right;
 }

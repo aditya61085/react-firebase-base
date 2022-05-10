@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useState} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,6 +12,10 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../Firebase/firebase';
+import { Alert, AlertTitle } from '@mui/material';
 
 function Copyright(props) {
   return (
@@ -29,13 +33,20 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn() {
+  const navigate = useNavigate();
+  const [signInError, setSignInError] = useState(null);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+
+    signInWithEmailAndPassword(auth, data.get('email'), data.get('password'))
+      .then((resp) => {
+        navigate("/");
+      })
+      .catch((error) =>
+        setSignInError(error)
+      );
   };
 
   return (
@@ -64,6 +75,7 @@ export default function SignIn() {
               id="email"
               label="Email Address"
               name="email"
+              value="admin@example.com"
               autoComplete="email"
               autoFocus
             />
@@ -75,12 +87,22 @@ export default function SignIn() {
               label="Password"
               type="password"
               id="password"
+              value="asasas12"
               autoComplete="current-password"
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
+
+            { signInError &&
+              <Alert severity="error">
+                <AlertTitle>{signInError}</AlertTitle>
+                Please fix the error.
+              </Alert>
+            }
+
+
             <Button
               type="submit"
               fullWidth

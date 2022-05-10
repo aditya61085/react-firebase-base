@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useState} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,6 +12,9 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { Alert, AlertTitle } from '@mui/material';
+import {auth} from '../../Firebase/firebase';
 
 function Copyright(props) {
   return (
@@ -28,15 +31,32 @@ function Copyright(props) {
 
 const theme = createTheme();
 
+
+ 
+
 export default function SignUp() {
+  const [signUpError, setSignUpError] = useState(null);
+
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    createUserWithEmailAndPassword(auth, data.get('email'), data.get('password'))
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        console.log('user:', user);
+        // ...
+      })
+      .catch((error) => {
+        // const errorCode = error.code;
+        const errorMessage = error.message;
+
+        setSignUpError(errorMessage);
+        // ..
+      });
   };
+ 
 
   return (
     <ThemeProvider theme={theme}>
@@ -107,6 +127,14 @@ export default function SignUp() {
                 />
               </Grid>
             </Grid>
+
+            { signUpError &&
+            <Alert severity="error">
+              <AlertTitle>{signUpError}</AlertTitle>
+              Please fix the error.
+            </Alert>
+            }
+
             <Button
               type="submit"
               fullWidth
