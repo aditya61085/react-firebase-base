@@ -1,0 +1,15 @@
+.app__header{
+  background-color: #fff;
+  border-bottom: 1px solid lightgray;
+  padding: 20px;
+  object-fit: contain;
+  white-space: nowrap;
+  
+}
+.app__headerImage {
+  flex-direction: row;
+}
+
+.header__rightSection {
+  flex-direction: row;
+}
