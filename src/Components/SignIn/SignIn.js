@@ -14,7 +14,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../Firebase/firebase';
+import { auth, googleAuthProvider } from '../../Firebase/firebase';
 import { Alert, AlertTitle } from '@mui/material';
 
 function Copyright(props) {
@@ -47,6 +47,19 @@ export default function SignIn() {
       .catch((error) =>
         setSignInError(error)
       );
+  };
+
+  const signInWithGoogle = async () => {
+    // Retrieve Google provider object
+    const provider = new googleAuthProvider();
+    // Set language to the default browser preference
+    auth.useDeviceLanguage();
+    // Start sign in process
+    try {
+      await auth.signInWithPopup(provider);
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   return (
@@ -111,6 +124,13 @@ export default function SignIn() {
             >
               Sign In
             </Button>
+
+            {/** Google sign in */}
+            <div>
+              <Button onClick={signInWithGoogle}>Sign in with Google</Button>;
+            </div>
+
+            {/** Forget and sign up option */}
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
