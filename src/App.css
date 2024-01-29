@@ -4,9 +4,3 @@
 .App {
   background-color: #fafafa;
 }
-.app__header{
-  background-color: #fff;
-  border-bottom: 1px solid lightgray;
-  padding: 20px;
-  object-fit: contain;
-}

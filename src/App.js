@@ -1,55 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import './App.css';
-import Post from './Components/Post/Post';
-import {db} from './Firebase/firebase';
-import { collection, getDocs } from 'firebase/firestore/lite';
+import Header from "./Components/Header/Header";
+import SignIn from './Components/SignIn/SignIn';
+import HomePage from './Components/HomePage/HomePage';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import SignUp from "./Components/SignUp/SignUp";
+import { AuthProvider } from "./Providers/AuthProvider";
 
 function App() {
 
-  const [postObj, setPostObj] = useState({
-    noOfPost: 0,
-    posts: []
-  });
-
-
-  async function getCities() {
-    const citiesCol = collection(db, 'posts');
-    const citySnapshot = await getDocs(citiesCol);
-    const cityList = citySnapshot.docs.map(doc => doc.data());
-    
-    console.log('cityList:', cityList);
-
-    setPostObj({
-      noOfPost: cityList.length,
-      posts: cityList
-    })
-  }
-
-
-  useEffect(() => {
-    getCities();
-  }, []);
-  
 
   return (
-    <div className="App">
-      
-      {/* Website header */ }
-      <div className='app__header'>
-        <img
-          className='app__headerImage'
-          src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
-          alt="Instagram logo"></img>
+    <BrowserRouter>
+    <AuthProvider>
+      <div className="App">
+
+        {/* Website header */ }
+        <Header></Header>
+
+          <Routes>
+            <Route exact path="/" element={<HomePage />} />
+            <Route exact path="login" element={<SignIn />} />
+            <Route exact path="signup" element={<SignUp />} />
+          </Routes>
       </div>
-
-      {/** Posts */}
-      {
-        postObj && postObj.posts && postObj.posts.map(post => (
-          <Post username={post.username} caption={post.caption} imageUrl={post.imageUrl} ></Post>
-        ))
-      }
-
-    </div>
+    </AuthProvider>
+    </BrowserRouter>
   );
 }
 
